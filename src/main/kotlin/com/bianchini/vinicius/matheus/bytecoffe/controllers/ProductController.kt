@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/products")
 class ProductController {
 
-    // TODO: retornar lista de produtos
     @GetMapping
     fun getAllProduct(): ResponseEntity<Any> {
         return ResponseEntity.ok("deu boa!")
