@@ -1,9 +1,7 @@
 package com.bianchini.vinicius.matheus.bytecoffe.controllers
 
-import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.AuthenticationDTO
-import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.RegisterDTO
-import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.User
-import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.UserRole
+import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.*
+import com.bianchini.vinicius.matheus.bytecoffe.infra.security.TokenService
 import com.bianchini.vinicius.matheus.bytecoffe.repositories.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -26,14 +24,19 @@ class AuthenticationController {
     @Autowired
     lateinit var usersRepository: UsersRepository
 
+    @Autowired
+    lateinit var tokenService: TokenService
+
     @PostMapping("/login")
     fun login(
         @RequestBody data: AuthenticationDTO
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<LoginResponseDTO> {
         val userNamePasswordAuthentication = UsernamePasswordAuthenticationToken(data.login, data.password)
         val auth = authenticationManager.authenticate(userNamePasswordAuthentication)
 
-        return ResponseEntity.ok().build()
+        val token = tokenService.generateToken(auth.principal as User)
+
+        return ResponseEntity.ok(LoginResponseDTO(token!!))
     }
 
     @PostMapping("/register")
