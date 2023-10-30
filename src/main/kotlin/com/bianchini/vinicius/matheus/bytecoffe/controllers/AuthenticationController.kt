@@ -1,7 +1,9 @@
 package com.bianchini.vinicius.matheus.bytecoffe.controllers
 
+import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.address.Address
 import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.*
 import com.bianchini.vinicius.matheus.bytecoffe.infra.security.TokenService
+import com.bianchini.vinicius.matheus.bytecoffe.repositories.AddressRepository
 import com.bianchini.vinicius.matheus.bytecoffe.repositories.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -25,6 +27,9 @@ class AuthenticationController {
     lateinit var usersRepository: UsersRepository
 
     @Autowired
+    lateinit var addressRepository: AddressRepository
+
+    @Autowired
     lateinit var tokenService: TokenService
 
     @PostMapping("/login")
@@ -36,27 +41,64 @@ class AuthenticationController {
 
         val token = tokenService.generateToken(auth.principal as User)
 
-        return ResponseEntity.ok(LoginResponseDTO(token!!))
+        val user = auth.principal as User
+
+        val address = addressRepository.findById(user.id).get()
+
+        return ResponseEntity.ok(
+            LoginResponseDTO(
+                user = user,
+                token = token!!,
+                address = address
+            )
+        )
     }
 
     @PostMapping("/register")
     fun register(
         @RequestBody data: RegisterDTO
-    ): ResponseEntity<Any> {
-        if (usersRepository.findByEmail(data.email) != null) return ResponseEntity.badRequest().build()
+    ): ResponseEntity<RegisterResponseDTO> {
+        val dataProfileInfo = data.profile_info
+        val dataAddress = data.address
 
-        val encryptedPassword = BCryptPasswordEncoder().encode(data.password)
+        if (usersRepository.findByEmail(dataProfileInfo.email) != null) return ResponseEntity.badRequest().build()
+
+        val encryptedPassword = BCryptPasswordEncoder().encode(dataProfileInfo.password)
+        val userId = UUID.randomUUID().toString()
         val user = User(
-            id = UUID.randomUUID().toString(),
-            email = data.email,
-            name = data.name,
-            surname = data.surname,
+            id = userId,
+            email = dataProfileInfo.email,
+            name = dataProfileInfo.name,
+            surname = dataProfileInfo.surname,
             user_password = encryptedPassword,
-            role = UserRole.findByString(data.role)
+            role = UserRole.findByString(dataProfileInfo.role)
         )
+
+        val address = Address(
+            id = UUID.randomUUID().toString(),
+            street = dataAddress.street,
+            neighborhood = dataAddress.neighborhood,
+            number = dataAddress.number,
+            city_and_state = dataAddress.city_and_state,
+            profile_id = userId
+        )
+
+        addressRepository.save(address)
 
         usersRepository.save(user)
 
-        return ResponseEntity.ok().build()
+        val userNamePasswordAuthentication =
+            UsernamePasswordAuthenticationToken(data.profile_info.email, data.profile_info.password)
+        val auth = authenticationManager.authenticate(userNamePasswordAuthentication)
+
+        val token = tokenService.generateToken(auth.principal as User)
+
+        return ResponseEntity.ok(
+            RegisterResponseDTO(
+                user = user,
+                address = address,
+                token = token!!
+            )
+        )
     }
 }
