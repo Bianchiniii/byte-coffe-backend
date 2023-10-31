@@ -21,7 +21,7 @@ data class User(
     val name: String,
     val surname: String,
     val user_password: String,
-    val role: UserRole
+    val role: UserRole,
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {

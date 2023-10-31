@@ -15,7 +15,7 @@ class ProductController {
     @Autowired
     lateinit var productRepository: ProductRepository
 
-    @GetMapping
+    @GetMapping("/all")
     fun getAllProducts(): ResponseEntity<List<Product>> {
         return ResponseEntity.ok(productRepository.findAll())
     }

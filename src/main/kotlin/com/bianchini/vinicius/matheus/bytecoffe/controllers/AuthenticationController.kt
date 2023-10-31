@@ -64,28 +64,29 @@ class AuthenticationController {
         if (usersRepository.findByEmail(dataProfileInfo.email) != null) return ResponseEntity.badRequest().build()
 
         val encryptedPassword = BCryptPasswordEncoder().encode(dataProfileInfo.password)
-        val userId = UUID.randomUUID().toString()
+
         val user = User(
-            id = userId,
+            id = UUID.randomUUID().toString(),
             email = dataProfileInfo.email,
             name = dataProfileInfo.name,
             surname = dataProfileInfo.surname,
             user_password = encryptedPassword,
-            role = UserRole.findByString(dataProfileInfo.role)
+            role = UserRole.findByString(dataProfileInfo.role),
         )
 
-        val address = Address(
+        val createdUser = usersRepository.save(user)
+
+        val saveAddress = Address(
             id = UUID.randomUUID().toString(),
             street = dataAddress.street,
             neighborhood = dataAddress.neighborhood,
             number = dataAddress.number,
             city_and_state = dataAddress.city_and_state,
-            profile_id = userId
+            profile_id = createdUser.id
         )
 
-        addressRepository.save(address)
+        addressRepository.save(saveAddress)
 
-        usersRepository.save(user)
 
         val userNamePasswordAuthentication =
             UsernamePasswordAuthenticationToken(data.profile_info.email, data.profile_info.password)
@@ -96,7 +97,7 @@ class AuthenticationController {
         return ResponseEntity.ok(
             RegisterResponseDTO(
                 user = user,
-                address = address,
+                address = saveAddress,
                 token = token!!
             )
         )

@@ -5,5 +5,5 @@ CREATE TABLE address
     neighborhood   TEXT                    NOT NULL,
     number         TEXT                    NOT NULL,
     city_and_state TEXT                    NOT NULL,
-    profile_id     TEXT                    NOT NULL
+    profile_id     TEXT REFERENCES users (id)
 )

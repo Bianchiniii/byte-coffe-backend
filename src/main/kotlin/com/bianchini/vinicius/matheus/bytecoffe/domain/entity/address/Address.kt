@@ -18,5 +18,5 @@ data class Address(
     val neighborhood: String,
     val number: String,
     val city_and_state: String,
-    val profile_id: String
+    val profile_id: String,
 )
