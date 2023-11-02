@@ -43,7 +43,7 @@ class AuthenticationController {
 
         val user = auth.principal as User
 
-        val address = addressRepository.findById(user.id).get()
+        val address = addressRepository.findByProfileId(user.id)!!
 
         return ResponseEntity.ok(
             LoginResponseDTO(

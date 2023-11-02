@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode
 import lombok.NoArgsConstructor
 
 @Table(name = "address")
-@Entity(name = "addresst")
+@Entity(name = "address")
 @EqualsAndHashCode(of = ["id"])
 @AllArgsConstructor
 @NoArgsConstructor
