@@ -15,6 +15,7 @@ data class Product(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: String,
     val name: String,
+    val description: String,
     val price_in_cents: Int,
     val category_id: String,
     val image: String
