@@ -13,11 +13,17 @@ import java.util.*
 @NoArgsConstructor
 data class Ticket(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     val id: String,
-    val profile_id: String,
-    val total_in_cents: Int,
-    val order_status: String,
-    val created_at: Date,
-    val updated_at: Date
+    @Column(name = "profile_id")
+    val profileId: String,
+    @Column(name = "total_in_cents")
+    val totalInCents: Int,
+    @Column(name = "order_status")
+    val orderStatus: String,
+    @Column(name = "created_at")
+    val createdAt: Date,
+    @Column(name = "updated_at")
+    val updatedAt: Date? = null
 )

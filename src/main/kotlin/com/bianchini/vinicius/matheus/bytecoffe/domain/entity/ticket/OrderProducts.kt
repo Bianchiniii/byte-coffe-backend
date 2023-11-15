@@ -12,9 +12,13 @@ import lombok.NoArgsConstructor
 @NoArgsConstructor
 data class OrderProducts(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     val id: String,
-    val order_id: String,
-    val subtotal_in_cents: Int,
+    @Column(name = "order_id")
+    val orderId: String,
+    @Column(name = "product_id")
+    val productId: String,
+    @Column(name = "quantity")
     val quantity: Int
 )

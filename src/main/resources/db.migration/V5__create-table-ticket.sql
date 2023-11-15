@@ -5,13 +5,13 @@ CREATE TABLE ticket
     total_in_cents INT                     NOT NULL,
     order_status   TEXT                    NOT NULL,
     created_at     DATE                    NOT NULL,
-    updated_ate    DATE
+    updated_at     DATE
 );
 
 CREATE TABLE order_products
 (
-    id                TEXT PRIMARY KEY UNIQUE NOT NULL,
-    order_id          TEXT REFERENCES ticket (id),
-    subtotal_in_cents INT                     NOT NULL,
-    quantity          INT                     NOT NULL
+    id         TEXT PRIMARY KEY UNIQUE NOT NULL,
+    order_id   TEXT REFERENCES ticket (id),
+    product_id TEXT REFERENCES product (id),
+    quantity   INT                     NOT NULL
 )

@@ -13,10 +13,16 @@ import lombok.NoArgsConstructor
 data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     val id: String,
+    @Column(name = "name")
     val name: String,
+    @Column(name = "description")
     val description: String,
+    @Column(name = "price_in_cents")
     val price_in_cents: Int,
+    @Column(name = "category_id")
     val category_id: String,
+    @Column(name = "image")
     val image: String
 )

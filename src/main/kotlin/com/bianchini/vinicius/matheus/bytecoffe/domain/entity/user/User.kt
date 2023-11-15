@@ -16,11 +16,17 @@ import org.springframework.security.core.userdetails.UserDetails
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     val id: String,
+    @Column(name = "email")
     val email: String,
+    @Column(name = "name")
     val name: String,
+    @Column(name = "surname")
     val surname: String,
+    @Column(name = "user_password")
     val user_password: String,
+    @Column(name = "role")
     val role: UserRole,
 ) : UserDetails {
 
