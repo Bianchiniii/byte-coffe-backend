@@ -100,6 +100,10 @@ class TicketController {
             allOrderByProfileId.tickets.add(order)
         }
 
+        allOrderByProfileId.tickets.sortByDescending  {
+            it.createdAt
+        }
+
         return ResponseEntity.ok(allOrderByProfileId)
     }
 }
