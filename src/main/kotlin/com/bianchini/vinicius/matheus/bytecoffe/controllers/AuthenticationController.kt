@@ -2,6 +2,8 @@ package com.bianchini.vinicius.matheus.bytecoffe.controllers
 
 import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.address.Address
 import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.*
+import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.updateuser.UpdateUserDTO
+import com.bianchini.vinicius.matheus.bytecoffe.domain.entity.user.updateuser.UpdatedResponseDTO
 import com.bianchini.vinicius.matheus.bytecoffe.infra.security.TokenService
 import com.bianchini.vinicius.matheus.bytecoffe.repositories.AddressRepository
 import com.bianchini.vinicius.matheus.bytecoffe.repositories.UsersRepository
@@ -99,6 +101,32 @@ class AuthenticationController {
                 user = user,
                 address = saveAddress,
                 token = token!!
+            )
+        )
+    }
+
+    @PostMapping("/update-profile")
+    fun updateUser(
+        @RequestBody data: UpdateUserDTO
+    ): ResponseEntity<UpdatedResponseDTO> {
+        if (usersRepository.findByEmail(data.email) != null) return ResponseEntity.badRequest().build()
+
+        val encryptedPassword = BCryptPasswordEncoder().encode(data.password)
+
+        usersRepository.updateUserById(
+            id = data.id,
+            email = data.email,
+            name = data.name,
+            surname = data.surname,
+            user_password = encryptedPassword
+
+        )
+
+        val user = usersRepository.findByEmail(data.email) as User
+
+        return ResponseEntity.ok(
+            UpdatedResponseDTO(
+                user = user
             )
         )
     }

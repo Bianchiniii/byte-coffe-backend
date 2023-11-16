@@ -1,7 +1,5 @@
 package com.bianchini.vinicius.matheus.bytecoffe.domain.entity.ticket
 
-import java.util.*
-
 data class AllTicketDTO(
     val tickets: MutableList<Order>
 )
