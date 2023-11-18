@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 import java.util.logging.Logger
 
 @Component
-class OrderJob {
+class RefreshOrderStatusJob {
 
     @Autowired
     lateinit var ticketRepository: TicketRepository
